@@ -1,6 +1,3 @@
-Police
-======
-
 Police Extension for Essentials                                  
 -------------------------------
 
