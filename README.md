@@ -1,21 +1,20 @@
 Police
 ======
 
-########################################################################################
-# +----------------------------------------------------------------------------------+ #
-# |                 Police Extension for Essentials                                  | #
-# |  Inofficial & Unaffiliated with Essentials Development Team                      | #
-# |                                                                                  | #
-# |  Credits for Essentials Plugin:                                                  | #
-# |    "Essentials is currently developed and maintained by ementalo, snowleo, and   | #
-# |     KHobbits. Many thanks to the past developers and contributors: Zenexer,      | #
-# |     Aelux, Brettflan, KimKandor, ceulemans, necrodoom and Xeology.               | #
-# |                                                                                  | #
-# |  Please note that as an extension, this plugin requires Essentials.              | #
-# |  You can find Essentials at http://dev.bukkit.org/server-mods/essentials/        | #
-# |                                                                                  | #
-# +----------------------------------------------------------------------------------+ #
-########################################################################################
+
+                 Police Extension for Essentials                                  
+  Inofficial & Unaffiliated with Essentials Development Team                      
+                                                                                  
+  Credits for Essentials Plugin:                                                  
+    "Essentials is currently developed and maintained by ementalo, snowleo, and   
+     KHobbits. Many thanks to the past developers and contributors: Zenexer,      
+     Aelux, Brettflan, KimKandor, ceulemans, necrodoom and Xeology.               
+                                                                                  
+  Please note that as an extension, this plugin requires Essentials.              
+  You can find Essentials at http://dev.bukkit.org/server-mods/essentials/        
+                                                                                  
+
+
 
 Features:
  - Plaintext / MySQL-logging of Jails and Bans: Who jailed, when, why, for how long and where.
