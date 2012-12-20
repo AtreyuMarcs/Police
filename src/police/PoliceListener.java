@@ -67,14 +67,14 @@ public class PoliceListener implements Listener {
 			{
 				Essentials ess = (Essentials)police.getServer().getPluginManager().getPlugin("Essentials");
 				if (ess == null) {
-					police.getLogger().info("Null Error in JailSCListener");
+					police.getLogger().info("Null Error in PoliceListener");
 					event.setCancelled(true);
 					return;
 				}
 				
 				final User player = ess.getUser(event.getPlayer());
 				if (player == null) {
-					police.getLogger().info("Internal Error in JailSCListener");
+					police.getLogger().info("Internal Error in PoliceListener");
 					event.setCancelled(true);
 					return;
 				}
