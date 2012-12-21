@@ -287,7 +287,11 @@ public class Police extends JavaPlugin {
 			}
 		}
 		
-		getServer().getScheduler().runTaskAsynchronously(this, new AsyncWriter(name, jr, null, this, false));
+		if (isUsingSQL())
+			getServer().getScheduler().runTaskAsynchronously(this, new AsyncWriter(name, jr, null, this, false));
+		else
+			syncWrite(name, jr, null, false);
+			
 	}
 	
 	protected void addBanRecord(String name, BanRecord br) {
@@ -295,7 +299,10 @@ public class Police extends JavaPlugin {
 			getRecords().get(name).getBanRecords().add(br);
 		}
 		
-		getServer().getScheduler().runTaskAsynchronously(this, new AsyncWriter(name, null, br, this, false));
+		if (isUsingSQL())
+			getServer().getScheduler().runTaskAsynchronously(this, new AsyncWriter(name, null, br, this, false));
+		else
+			syncWrite(name, null, br, false);
 	}
 	
 	public void deleteJailInfo(String playerName, JailRecord jr) {
@@ -303,7 +310,64 @@ public class Police extends JavaPlugin {
 			getRecords().get(playerName).getJailRecords().remove(jr);
 		}
 		
-		getServer().getScheduler().runTaskAsynchronously(this,  new AsyncWriter(playerName, jr, null, this, true));
+		if (isUsingSQL())
+			getServer().getScheduler().runTaskAsynchronously(this,  new AsyncWriter(playerName, jr, null, this, true));
+		else
+			syncWrite(playerName, jr, null, true);
+	}
+	
+	protected void syncWrite(String name, JailRecord jr, BanRecord br, boolean delete) {
+		if (!isUsingSQL()) {			
+			if (jr != null) {
+				if (!getPlainFile().getConfigurationSection("jail").contains(name)) {
+					getPlainFile().getConfigurationSection("jail").createSection(name);
+				}				
+
+				ConfigurationSection jailee = getPlainFile().getConfigurationSection("jail").getConfigurationSection(name);
+
+				if (jailee != null) { //should always be the case
+
+					if (delete) {
+						for (String s : jailee.getKeys(false)) {
+							if (jailee.getInt(s + ".id") == jr.getId())
+								jailee.set(s, null);
+						}
+						
+						plainSave();
+
+					} else {
+
+						int nextEntry = jailee.getKeys(false).size() + 1;
+						jr.setId(nextEntry);
+						jailee.set(nextEntry + ".jailedby", jr.getJailor());
+						jailee.set(nextEntry + ".duration", jr.getDuration());
+						jailee.set(nextEntry + ".reason", jr.getReason());
+						jailee.set(nextEntry + ".pos", jr.getPos());
+						jailee.set(nextEntry + ".datetime", jr.getDatetime().getTime());
+						jailee.set(nextEntry + ".id", jr.getId());
+
+						plainSave();
+					}
+				}
+			}
+
+			if (br != null) {
+				if (!getPlainFile().getConfigurationSection("ban").contains(name)) {
+					getPlainFile().getConfigurationSection("ban").createSection(name);
+				}				
+
+				ConfigurationSection banned = getPlainFile().getConfigurationSection("ban").getConfigurationSection(name);
+
+				if (banned != null) { //should always be the case
+					String nextEntry = String.valueOf(banned.getKeys(false).size() + 1);
+					banned.set(nextEntry + ".bannedby", br.getBannedby());
+					banned.set(nextEntry + ".reason", br.getReason());
+					banned.set(nextEntry + ".datetime", br.getDatetime().getTime());
+
+					plainSave();
+				}
+			}
+		}
 	}
 	
 	protected void loadPlayer(String name) {
@@ -326,7 +390,7 @@ public class Police extends JavaPlugin {
 					List<JailRecord> jailRecords = new ArrayList<JailRecord>();
 					
 					while (resultSet.next()) {
-						jailRecords.add(new JailRecord(resultSet.getString("jailedby"), resultSet.getString("duration"), resultSet.getString("reason"), resultSet.getString("pos"), resultSet.getDate("datetime"), resultSet.getInt("jailid")));
+						jailRecords.add(new JailRecord(resultSet.getString("jailedby"), resultSet.getString("duration"), resultSet.getString("reason"), resultSet.getString("pos"), resultSet.getTimestamp("datetime"), resultSet.getInt("jailid")));
 					}
 					
 					pr.setJailRecords(jailRecords);
@@ -338,7 +402,7 @@ public class Police extends JavaPlugin {
 					List<BanRecord> banRecords = new ArrayList<BanRecord>();
 					
 					while (resultSet.next()) {
-						banRecords.add(new BanRecord(resultSet.getString("reason"), resultSet.getString("bannedby"), resultSet.getDate("datetime")));
+						banRecords.add(new BanRecord(resultSet.getString("reason"), resultSet.getString("bannedby"), resultSet.getTimestamp("datetime")));
 					}
 					
 					pr.setBanRecords(banRecords);

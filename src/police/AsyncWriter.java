@@ -3,6 +3,7 @@ package police;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -54,7 +55,7 @@ public class AsyncWriter implements Runnable {
 							statement.setString(2, jr.getJailor());
 							statement.setString(3, jr.getDuration());
 							statement.setString(4, jr.getReason());
-							statement.setString(5, String.valueOf(jr.getDatetime().getTime()));
+							statement.setTimestamp(5, new Timestamp(jr.getDatetime().getTime()));
 							statement.setString(6, jr.getPos());
 							statement.executeUpdate();
 
@@ -64,7 +65,7 @@ public class AsyncWriter implements Runnable {
 							PreparedStatement queryStatement = police.getConnection().prepareStatement("select * from police_jail where playername=? order by jailid ASC");
 							queryStatement.setString(1, name);
 
-							ResultSet resultSet = statement.executeQuery();
+							ResultSet resultSet = queryStatement.executeQuery();
 
 							int x = 0;
 
@@ -88,7 +89,7 @@ public class AsyncWriter implements Runnable {
 						statement.setString(1, name);
 						statement.setString(2, br.getReason());
 						statement.setString(3, br.getBannedby());
-						statement.setString(4, String.valueOf(jr.getDatetime().getTime()));
+						statement.setTimestamp(4, new Timestamp(br.getDatetime().getTime()));
 						statement.executeUpdate();
 
 						if (statement != null)
@@ -96,6 +97,7 @@ public class AsyncWriter implements Runnable {
 					}
 				} catch (SQLException ex) {
 					police.getLogger().log(Level.WARNING, "Could not write police records for player " + name);
+					police.getLogger().info(ex.toString());
 				}
 			}
 		} else {			
