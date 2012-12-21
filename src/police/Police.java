@@ -52,6 +52,8 @@ public class Police extends JavaPlugin {
 	private String defaultBanReason;
 	private String defaultWorld;
 	private SimpleDateFormat dateTimeFormat;
+	/*private String jailPrefix;
+	private String jailSuffix;*/
 
 	@Override
 	public void onEnable() {
@@ -84,6 +86,9 @@ public class Police extends JavaPlugin {
 		setPort(this.getConfig().getConfigurationSection("sql").getString("port", ""));
 		setUsingSQL(this.getConfig().getConfigurationSection("sql").getBoolean("use", false));
 		setSqltimeout(this.getConfig().getConfigurationSection("sql").getInt("sql_timeout", 5));
+		
+		/*setJailPrefix(this.getConfig().getString("jail_prefix"));
+		setJailSuffix(this.getConfig().getString("jail_suffix"));*/
 				
 		getCommand("jailinfo").setExecutor(new JailInfoCommand(this));
 		
@@ -689,4 +694,20 @@ public class Police extends JavaPlugin {
 	public void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
 		this.dateTimeFormat = dateTimeFormat;
 	}
+
+	/*public String getJailPrefix() {
+		return jailPrefix;
+	}
+
+	public void setJailPrefix(String jailPrefix) {
+		this.jailPrefix = jailPrefix;
+	}
+
+	public String getJailSuffix() {
+		return jailSuffix;
+	}
+
+	public void setJailSuffix(String jailSuffix) {
+		this.jailSuffix = jailSuffix;
+	}*/
 }
