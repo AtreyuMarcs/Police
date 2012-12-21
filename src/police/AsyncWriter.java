@@ -119,6 +119,7 @@ public class AsyncWriter implements Runnable {
 					} else {
 
 						int nextEntry = jailee.getKeys(false).size() + 1;
+						jr.setId(nextEntry);
 						jailee.set(nextEntry + ".jailedby", jr.getJailor());
 						jailee.set(nextEntry + ".duration", jr.getDuration());
 						jailee.set(nextEntry + ".reason", jr.getReason());

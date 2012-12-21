@@ -124,7 +124,7 @@ public class ToggleJailCommand implements CommandExecutor {
 			
 			senderPos = senderPos + String.valueOf((int)p.getLocation().getX()) + "," + String.valueOf((int)p.getLocation().getY()) + "," + String.valueOf((int)p.getLocation().getZ());
 			
-			JailRecord jr = new JailRecord(senderName, String.valueOf(timeDiff - System.currentTimeMillis()), reason, senderPos, new Date(), 0);
+			JailRecord jr = new JailRecord(senderName, time, reason, senderPos, new Date(), 0);
 			
 			police.addJailRecord(player.getName().toLowerCase(), jr, sender);			
 			

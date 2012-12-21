@@ -26,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,7 +51,8 @@ public class Police extends JavaPlugin {
 	private int sqltimeout;
 	private String defaultBanReason;
 	private String defaultWorld;
-	
+	private SimpleDateFormat dateTimeFormat;
+
 	@Override
 	public void onEnable() {
 		// Plugin Enable Logic
@@ -65,7 +67,9 @@ public class Police extends JavaPlugin {
 			setEnabled(false);
 			return;
 		}
-				
+		
+		dateTimeFormat = new SimpleDateFormat("dd/MM/''yy H:mm");
+		
 		this.setRecords(new HashMap<String, PoliceRecord>());
 		
 		setAutobanNumber(this.getConfig().getInt("jail_autoban_number", 0));
@@ -94,6 +98,8 @@ public class Police extends JavaPlugin {
 		getCommand("unban").setExecutor(new UnbanCommand(this));
 		
 		getServer().getPluginManager().registerEvents(new PoliceListener(this), this);
+		
+		initializePermissionHandler();
 		
 		if (isUsingSQL())
 			setUsingSQL(open(true));
@@ -206,16 +212,29 @@ public class Police extends JavaPlugin {
 		File file = new File(getDataFolder(), "policerecords.yml");
 		if (!file.exists()) {
 			try {
+				this.getLogger().info("[Police] Creating PlainFile from scratching.");
+				
 				file.createNewFile();
 				setPlainFile(YamlConfiguration.loadConfiguration(file));
 				getPlainFile().createSection("jail");
 				getPlainFile().createSection("ban");
+				plainSave();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				getLogger().log(Level.SEVERE, "Failed to create Plainfile. Check your folder permissions.");
 			}
 		} else {
+			this.getLogger().info("[Police] Using PlainFile");
 			setPlainFile(YamlConfiguration.loadConfiguration(file));
+			
+			// Sane setup
+			if (!getPlainFile().isConfigurationSection("jail"))
+				getPlainFile().createSection("jail");
+			
+			if (!getPlainFile().isConfigurationSection("ban"))
+				getPlainFile().createSection("ban");
+			
+			plainSave();
 		}
 	}
 	
@@ -356,7 +375,9 @@ public class Police extends JavaPlugin {
 					}
 					
 					pr.setJailRecords(jailRecords);
-					
+				}
+				
+				if (getPlainFile().getConfigurationSection("ban").contains(name)) {
 					List<BanRecord> banRecords = new ArrayList<BanRecord>();
 					
 					ConfigurationSection banBlock = getPlainFile().getConfigurationSection("ban").getConfigurationSection(name);
@@ -454,7 +475,7 @@ public class Police extends JavaPlugin {
 				else
 					message += String.valueOf(i);
 				
-				message += "] " + jr.getDatetime().toString() + " " + jr.getJailor() + " for " + jr.getDuration();
+				message += "] " + getDateTimeFormat().format(jr.getDatetime()) + " " + jr.getJailor() + " for " + jr.getDuration();
 				
 				if (other)
 					message += " at pos " + jr.getPos();
@@ -596,5 +617,12 @@ public class Police extends JavaPlugin {
 	public void setDefaultWorld(String defaultWorld) {
 		this.defaultWorld = defaultWorld;
 	}
-	
+
+	public SimpleDateFormat getDateTimeFormat() {
+		return dateTimeFormat;
+	}
+
+	public void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
+		this.dateTimeFormat = dateTimeFormat;
+	}
 }

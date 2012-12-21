@@ -17,13 +17,13 @@
 # SQL Setup
 # If use is set to false, using flatfile instead
 sql:
-	use: 'true'
-    database: test
-    user: test
-    password: test
-    host: localhost
-    port: 3306
-    sql_timeout: 5
+  use: 'true'
+  database: test
+  user: test
+  password: test
+  host: localhost
+  port: 3306
+  sql_timeout: 5
 
 # Automatically ban after X jail sentences
 # Set to 0 to disable

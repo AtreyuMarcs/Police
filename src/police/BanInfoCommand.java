@@ -56,7 +56,7 @@ public class BanInfoCommand implements CommandExecutor {
 				sender.sendMessage(message);
 			}
 			
-			String message = "[" + x + "] " + br.getDatetime().toString() + " by " + br.getBannedby() + ": " + br.getReason();
+			String message = "[" + x + "] " + police.getDateTimeFormat().format(br.getDatetime()) + " by " + br.getBannedby() + ": " + br.getReason();
 			
 			if (sender instanceof Player)
 				message = ChatColor.GREEN + message;
