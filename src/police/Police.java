@@ -167,7 +167,7 @@ public class Police extends JavaPlugin {
 	
 	public boolean open(boolean verbose) {
 		try {
-			String url = new StringBuilder().append("jdbc:mysql://").append(this.host).append(":").append(this.port).append("/").append(this.db).append("?autoReconnect=true").toString();
+			String url = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.db + "?autoReconnect=true";
 			this.setConnection(DriverManager.getConnection(url, this.username, this.password));
 			
 			if (this.connection != null) {
@@ -207,7 +207,6 @@ public class Police extends JavaPlugin {
 			try {
 				getPlainFile().save(file);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				getLogger().log(Level.SEVERE, "Failed to write to Plainfile. Check your folder permissions.");
 			}
 		}
@@ -219,13 +218,13 @@ public class Police extends JavaPlugin {
 			try {
 				this.getLogger().info("[Police] Creating PlainFile from scratching.");
 				
-				file.createNewFile();
-				setPlainFile(YamlConfiguration.loadConfiguration(file));
-				getPlainFile().createSection("jail");
-				getPlainFile().createSection("ban");
-				plainSave();
+				if (file.createNewFile()) {
+				    setPlainFile(YamlConfiguration.loadConfiguration(file));
+				    getPlainFile().createSection("jail");
+				    getPlainFile().createSection("ban");
+				    plainSave();
+                }
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				getLogger().log(Level.SEVERE, "Failed to create Plainfile. Check your folder permissions.");
 			}
 		} else {
@@ -252,24 +251,26 @@ public class Police extends JavaPlugin {
 		}
 		
 		try {
-			
-			if (!getConnection().isValid(getSqltimeout())) {
-				if (!open(false)) {
-					getLogger().log(Level.SEVERE, "No SQL Connection established");
-					return;
-				}
-			}
-			
-			Statement statement = getConnection().createStatement();
-			statement.executeUpdate("CREATE TABLE IF NOT EXISTS `police_jail` (`jailid` MEDIUMINT NOT NULL AUTO_INCREMENT, `playername` VARCHAR(32), `jailedby` VARCHAR(32), `duration` VARCHAR(32), `reason` TEXT, `datetime` TIMESTAMP, `pos` TEXT, PRIMARY KEY (`jailid`), INDEX (`playername`))");
-			statement.executeUpdate("CREATE TABLE IF NOT EXISTS `police_ban` (`banid` MEDIUMINT NOT NULL AUTO_INCREMENT, `playername` VARCHAR(32), `bannedby` VARCHAR(32), `reason` TEXT, `datetime` TIMESTAMP, PRIMARY KEY (`banid`), INDEX (`playername`))");
-			
-			statement.close();
-			
-			getLogger().info("[Police] Database tables initialized");
-		}  catch (SQLException ex) {
-			getLogger().log(Level.SEVERE, "Tables could not be created");
-		}
+
+            if (getConnection() != null) {
+                if (!getConnection().isValid(getSqltimeout())) {
+                    if (!open(false)) {
+                        getLogger().log(Level.SEVERE, "No SQL Connection established");
+                        return;
+                    }
+                }
+
+                Statement statement = getConnection().createStatement();
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS `police_jail` (`jailid` MEDIUMINT NOT NULL AUTO_INCREMENT, `playername` VARCHAR(32), `jailedby` VARCHAR(32), `duration` VARCHAR(32), `reason` TEXT, `datetime` TIMESTAMP, `pos` TEXT, PRIMARY KEY (`jailid`), INDEX (`playername`))");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS `police_ban` (`banid` MEDIUMINT NOT NULL AUTO_INCREMENT, `playername` VARCHAR(32), `bannedby` VARCHAR(32), `reason` TEXT, `datetime` TIMESTAMP, PRIMARY KEY (`banid`), INDEX (`playername`))");
+
+                statement.close();
+
+                getLogger().info("[Police] Database tables initialized");
+            }
+        }  catch (Exception ex) {
+            getLogger().log(Level.SEVERE, "Tables could not be created");
+        }
 	}
 	
 	protected void addJailRecord(String name, JailRecord jr, CommandSender sender) {
@@ -414,11 +415,9 @@ public class Police extends JavaPlugin {
 					
 					getRecords().put(name, pr);
 					
-					if (resultSet != null)
-						resultSet.close();
+					resultSet.close();
 					
-					if (statement != null)
-						statement.close();
+					statement.close();
 					
 				} catch (SQLException ex) {
 					getLogger().log(Level.WARNING, "Could not read police records for player " + name);
@@ -529,7 +528,7 @@ public class Police extends JavaPlugin {
 						message = ChatColor.GREEN + message;
 					
 					sender.sendMessage(message);
-				} else if (i == 1 && !other) {
+				} else if (i == 1) {
 					String message = "Your jail history:";
 					if (sender instanceof Player)
 						message = ChatColor.GREEN + message;
@@ -564,7 +563,7 @@ public class Police extends JavaPlugin {
 		}
 	}
 	
-	public void jailTime(Player sender, User player, boolean other) {
+	public void jailTime(CommandSender sender, User player, boolean other) {
 		if (sender == null || player == null)
 			return;
 		
@@ -586,45 +585,21 @@ public class Police extends JavaPlugin {
 	public void setAutobanNumber(int autobanNumber) {
 		this.autobanNumber = autobanNumber;
 	}
-	
-	public boolean autobanEnabled() {
-		return (autobanNumber > 0); 
-	}
 
-	public String getDb() {
-		return db;
-	}
-
-	public void setDb(String db) {
+    public void setDb(String db) {
 		this.db = db;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
+    public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public String getHost() {
-		return host;
-	}
-
 	public void setHost(String host) {
 		this.host = host;
-	}
-
-	public String getPort() {
-		return port;
 	}
 
 	public void setPort(String port) {
@@ -689,10 +664,6 @@ public class Police extends JavaPlugin {
 
 	public SimpleDateFormat getDateTimeFormat() {
 		return dateTimeFormat;
-	}
-
-	public void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
-		this.dateTimeFormat = dateTimeFormat;
 	}
 
 	/*public String getJailPrefix() {

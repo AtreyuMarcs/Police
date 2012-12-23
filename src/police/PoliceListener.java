@@ -38,7 +38,7 @@ public class PoliceListener implements Listener {
 		final Block block;
 		if (event.isCancelled() && event.getAction() == Action.RIGHT_CLICK_AIR)
 		{
-			Block targetBlock = null;
+			Block targetBlock;
 			try
 			{
 				targetBlock = event.getPlayer().getTargetBlock(null, 5);
@@ -87,8 +87,7 @@ public class PoliceListener implements Listener {
 				
 				police.jailTime(event.getPlayer(), player, false);				
 				event.setCancelled(true);
-				return;
-			}
+            }
 			
 		}
 	}

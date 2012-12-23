@@ -1,9 +1,5 @@
 package police;
 
-
-
-
-
 import java.util.Date;
 
 import org.bukkit.ChatColor;

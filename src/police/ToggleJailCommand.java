@@ -93,7 +93,6 @@ public class ToggleJailCommand implements CommandExecutor {
 					timeDiff = Util.parseDateDiff(time, true);
 					player.setJailTimeout(timeDiff);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					sender.sendMessage("Jail Time not recognized.");
 				}
 				
@@ -165,7 +164,6 @@ public class ToggleJailCommand implements CommandExecutor {
 				try {
 					player.getTeleport().back();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					//e.printStackTrace();
 				}
 			}

@@ -34,7 +34,7 @@ public class JailTimeCommand implements CommandExecutor {
 					return true;
 				}
 				
-				final User player = ess.getUser((Player)sender);
+				final User player = ess.getUser(sender);
 				if (player == null) {
 					sender.sendMessage("Internal error! Please contact your Admin!");
 					return true;
@@ -45,7 +45,7 @@ public class JailTimeCommand implements CommandExecutor {
 					return true;
 				}
 				
-				police.jailTime((Player)sender, player, false);
+				police.jailTime(sender, player, false);
 				return true;
 			}
 			
@@ -76,7 +76,7 @@ public class JailTimeCommand implements CommandExecutor {
 						return true;
 					}
 					
-					police.jailTime((Player)sender, player, false);
+					police.jailTime(sender, player, false);
 					return true;
 				}
 			} else {
@@ -97,7 +97,7 @@ public class JailTimeCommand implements CommandExecutor {
 					return true;
 				}
 				
-				police.jailTime((Player)sender, player, true);
+				police.jailTime(sender, player, true);
 				
 				return true;
 				

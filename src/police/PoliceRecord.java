@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PoliceRecord {
 
-	private String playerName;
+	String playerName;
 	private List<JailRecord> jailRecords;
 	private List<BanRecord> banRecords;
 	
@@ -15,11 +15,7 @@ public class PoliceRecord {
 		this.setBanRecords(new ArrayList<BanRecord>());
 	}
 
-	public String getPlayerName() {
-		return playerName;
-	}
-
-	public void setPlayerName(String playerName) {
+    public void setPlayerName(String playerName) {
 		this.playerName = playerName;
 	}
 

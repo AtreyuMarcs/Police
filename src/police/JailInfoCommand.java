@@ -19,7 +19,6 @@ public class JailInfoCommand implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		// TODO Auto-generated method stub
 		if (args.length == 0) {
 			if (!(sender instanceof Player)) {
 				return false;
@@ -35,8 +34,8 @@ public class JailInfoCommand implements CommandExecutor {
 					return true;
 				}
 				
-				final User player = ess.getUser((Player)sender);
-				police.jailInfo((Player)sender, player, false);
+				final User player = ess.getUser(sender);
+				police.jailInfo(sender, player, false);
 				return true;
 			}
 			

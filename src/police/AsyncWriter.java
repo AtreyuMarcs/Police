@@ -26,7 +26,6 @@ public class AsyncWriter implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		if (police.isUsingSQL()) {
 			if (police.getConnection() != null) {
 				try {
@@ -43,9 +42,8 @@ public class AsyncWriter implements Runnable {
 							PreparedStatement statement = police.getConnection().prepareStatement("delete from police_jail where jailid=?");
 							statement.setInt(1, jr.getId());
 							statement.executeUpdate();
-							
-							if (statement != null)
-								statement.close();
+
+                            statement.close();
 							
 						} else {
 
@@ -59,8 +57,7 @@ public class AsyncWriter implements Runnable {
 							statement.setString(6, jr.getPos());
 							statement.executeUpdate();
 
-							if (statement != null)
-								statement.close();
+                            statement.close();
 
 							PreparedStatement queryStatement = police.getConnection().prepareStatement("select * from police_jail where playername=? order by jailid ASC");
 							queryStatement.setString(1, name);
@@ -74,12 +71,10 @@ public class AsyncWriter implements Runnable {
 							}
 
 							jr.setId(x);
-							
-							if (resultSet != null)
-								resultSet.close();
-							
-							if (queryStatement != null)
-								queryStatement.close();
+
+                            resultSet.close();
+
+                            queryStatement.close();
 						}
 					}
 
@@ -92,8 +87,7 @@ public class AsyncWriter implements Runnable {
 						statement.setTimestamp(4, new Timestamp(br.getDatetime().getTime()));
 						statement.executeUpdate();
 
-						if (statement != null)
-							statement.close();
+                        statement.close();
 					}
 				} catch (SQLException ex) {
 					police.getLogger().log(Level.WARNING, "Could not write police records for player " + name);
