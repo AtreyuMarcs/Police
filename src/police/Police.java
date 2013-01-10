@@ -393,7 +393,7 @@ public class Police extends JavaPlugin {
 					statement.setString(1, name);
 					ResultSet resultSet = statement.executeQuery();
 					
-					List<JailRecord> jailRecords = new ArrayList<JailRecord>();
+					List<JailRecord> jailRecords = new ArrayList<>();
 					
 					while (resultSet.next()) {
 						jailRecords.add(new JailRecord(resultSet.getString("jailedby"), resultSet.getString("duration"), resultSet.getString("reason"), resultSet.getString("pos"), resultSet.getTimestamp("datetime"), resultSet.getInt("jailid")));
@@ -405,7 +405,7 @@ public class Police extends JavaPlugin {
 					statement.setString(1, name);
 					resultSet = statement.executeQuery();
 					
-					List<BanRecord> banRecords = new ArrayList<BanRecord>();
+					List<BanRecord> banRecords = new ArrayList<>();
 					
 					while (resultSet.next()) {
 						banRecords.add(new BanRecord(resultSet.getString("reason"), resultSet.getString("bannedby"), resultSet.getTimestamp("datetime")));
@@ -423,46 +423,44 @@ public class Police extends JavaPlugin {
 					getLogger().log(Level.WARNING, "Could not read police records for player " + name);
 				}
 			}
-		} else {
-			if (getPlainFile() != null) {
-				PoliceRecord pr = new PoliceRecord(name);
-				
-				if (getPlainFile().getConfigurationSection("jail").contains(name)) {
-					List<JailRecord> jailRecords = new ArrayList<JailRecord>();
-					
-					ConfigurationSection jailBlock = getPlainFile().getConfigurationSection("jail").getConfigurationSection(name);
-					for (String s : jailBlock.getKeys(false)) {
-						String jailedby = jailBlock.getString(s + ".jailedby");
-						String duration = jailBlock.getString(s + ".duration");
-						String reason = jailBlock.getString(s + ".reason");
-						String pos = jailBlock.getString(s + ".pos");
-						Date datetime = new Date(jailBlock.getLong(s + ".datetime"));
-						int x = jailBlock.getInt(s + ".id");
-						
-						jailRecords.add(new JailRecord(jailedby, duration, reason, pos, datetime, x));
-					}
-					
-					pr.setJailRecords(jailRecords);
-				}
-				
-				if (getPlainFile().getConfigurationSection("ban").contains(name)) {
-					List<BanRecord> banRecords = new ArrayList<BanRecord>();
-					
-					ConfigurationSection banBlock = getPlainFile().getConfigurationSection("ban").getConfigurationSection(name);
-					for (String s : banBlock.getKeys(false)) {
-						String bannedby = banBlock.getString(s + ".bannedby");
-						String reason = banBlock.getString(s + ".reason");
-						Date datetime = new Date(banBlock.getLong(s + ".datetime"));
-						
-						banRecords.add(new BanRecord(reason, bannedby, datetime));
-					}
-					
-					pr.setBanRecords(banRecords);
-				}
-					
-				getRecords().put(name, pr);
-			}
-		}
+		} else if (getPlainFile() != null) {
+            PoliceRecord pr = new PoliceRecord(name);
+
+            if (getPlainFile().getConfigurationSection("jail").contains(name)) {
+                List<JailRecord> jailRecords = new ArrayList<>();
+
+                ConfigurationSection jailBlock = getPlainFile().getConfigurationSection("jail").getConfigurationSection(name);
+                for (String s : jailBlock.getKeys(false)) {
+                    String jailedby = jailBlock.getString(s + ".jailedby");
+                    String duration = jailBlock.getString(s + ".duration");
+                    String reason = jailBlock.getString(s + ".reason");
+                    String pos = jailBlock.getString(s + ".pos");
+                    Date datetime = new Date(jailBlock.getLong(s + ".datetime"));
+                    int x = jailBlock.getInt(s + ".id");
+
+                    jailRecords.add(new JailRecord(jailedby, duration, reason, pos, datetime, x));
+                }
+
+                pr.setJailRecords(jailRecords);
+            }
+
+            if (getPlainFile().getConfigurationSection("ban").contains(name)) {
+                List<BanRecord> banRecords = new ArrayList<>();
+
+                ConfigurationSection banBlock = getPlainFile().getConfigurationSection("ban").getConfigurationSection(name);
+                for (String s : banBlock.getKeys(false)) {
+                    String bannedby = banBlock.getString(s + ".bannedby");
+                    String reason = banBlock.getString(s + ".reason");
+                    Date datetime = new Date(banBlock.getLong(s + ".datetime"));
+
+                    banRecords.add(new BanRecord(reason, bannedby, datetime));
+                }
+
+                pr.setBanRecords(banRecords);
+            }
+
+            getRecords().put(name, pr);
+        }
 	}
 	
 
