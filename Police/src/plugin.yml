@@ -1,0 +1,64 @@
+name: Police
+main: police.Police
+version: 1.01
+author: Elvaron (Updated by AtreyuMarcs)
+depend: []
+commands:
+  ban:
+    description: Bans a player.
+    usage: /ban <player> <reason>
+    aliases: [eban]
+  togglejail:
+    description: Jail a person
+    usage: /jail <player> <jailname> <datediff> <reason>
+    aliases: [tjail,jail,ejail,unjail,eunjail,etogglejail]
+  jailinfo:
+    description: Get a person's jailinfo or delete a jail record
+    usage: /jailinfo <player> | /jailinfo delete <player> <jail history id>
+  jailtime:
+    description: Shows a person's remaining jailtime
+    usage: /jailtime [player]
+  baninfo:
+    description: Get a person's ban info
+    usage: /baninfo <player>
+  unban:
+    description: Unbans the specified player.
+    usage: /<command> <player>
+    aliases: [pardon,eunban,epardon]
+permissions:
+  police.*:
+    description: All effects permission
+    children:
+      police.jailinfo.self: true
+      police.jailinfo.other: true
+      police.jailinfo.delete: true
+      police.jailtime.self: true
+      police.jailtime.other: true
+      police.baninfo: true
+      police.ban: true
+      police.ban.offline: true
+      police.ban.exempt: true
+      police.togglejail: true
+      police.unban: true
+  police.jailinfo.self:
+    default: true
+  police.jailinfo.other:
+    default: op
+  police.jailinfo.delete:
+    default: op
+  police.jailtime.self:
+    default: true
+  police.jailtime.other:
+    default: op
+  police.baninfo:
+    default: op
+  police.ban:
+    default: op
+  police.ban.offline:
+    default: op
+  police.ban.exampt:
+    default: op
+  police.togglejail:
+    default: op
+  police.unban:
+    default: op
